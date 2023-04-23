@@ -1,4 +1,4 @@
---creating a table with for my steam data
+--creating a table for my steam data
 CREATE TABLE my_games (
 steam_appid	SERIAL PRIMARY KEY,
 name VARCHAR (255),
@@ -41,5 +41,50 @@ LIMIT 1
 --using ::float operator to convert the result of the division of two integers to a floating-point number
 SELECT COUNT(*) FILTER (WHERE spent_time>0) AS played_games,
        COUNT (*) AS total_games,
-	   (COUNT(*) FILTER (WHERE spent_time>0)::float / COUNT(*)) * 100 AS percent_played
+	(COUNT(*) FILTER (WHERE spent_time>0)::float / COUNT(*)) * 100 AS percent_played
 FROM my_games	
+
+--I want to explore more and I will use a public steam data 
+--creating table for the steam data I found on Kaggle
+CREATE TABLE steam_data (
+appid SERIAL PRIMARY KEY,
+name VARCHAR (500),
+developer VARCHAR (500),	
+publisher VARCHAR (500),
+score_rank VARCHAR (500),	
+positive INTEGER,	
+negative INTEGER,	
+owners VARCHAR (255),	
+average_forever VARCHAR (255),	
+average_2weeks VARCHAR (255),
+median_forever VARCHAR (255),	
+median_2weeks VARCHAR (255),
+price NUMERIC (6,2),
+initialprice NUMERIC (6,2),
+discount NUMERIC (6,2),
+languages VARCHAR (500),
+genre VARCHAR (500),
+ccu INTEGER,
+tags VARCHAR (500));
+
+--copying values from a csv file
+COPY steam_data (appid,name,developer,publisher,score_rank,positive,negative,userscore,owners,average_forever,average_2weeks,median_forever,median_2weeks,price,initialprice,discount,languages,genre,ccu,tags)
+FROM 'C:\Datasets\steamspy_data.csv' 
+DELIMITER ',' 
+CSV HEADER;
+
+--I've got the error message "column 'userscore' does not exist in table"
+--It seems I missed one column while creating the table. Let's fix it with ALTER 
+ALTER TABLE steam_data
+ADD userscore INTEGER;
+
+--copying values from a csv file
+COPY steam_data (appid,name,developer,publisher,score_rank,positive,negative,owners,average_forever,average_2weeks,median_forever,median_2weeks,price,initialprice,discount,languages,genre,ccu,tags,userscore)
+FROM 'C:\Datasets\steamspy_data.csv' 
+DELIMITER ',' 
+CSV HEADER;
+
+--I've got a bunch of errors here and had to clean up the csv file in Spreadsheets 
+
+
+
