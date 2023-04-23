@@ -1,0 +1,45 @@
+--creating a table with for my steam data
+CREATE TABLE my_games (
+steam_appid	SERIAL PRIMARY KEY,
+name VARCHAR (255),
+spent_time NUMERIC (5,2));
+
+--copying values from csv file that I cleaned up earlier 
+COPY my_games (steam_appid,name,spent_time)
+FROM 'C:\Datasets\Steam_genresID.csv' 
+DELIMITER ',' 
+CSV HEADER;
+
+--Finding out how many games I bought
+--I am using Alias(AS) here to give the column a name
+SELECT COUNT(*) AS total_games
+FROM my_games
+
+--Finding out how much time I spent on playing steam games 
+SELECT SUM(hours_spent) AS total_spent_time
+FROM my_games
+
+--Intersting but I want to see actual number of days :) (spoiler:131 days)
+--I am using ROUND to round up the result after dividing by 24
+SELECT ROUND(SUM(spent_time)/24) AS total_spent_time
+FROM my_games
+
+--My top-5 games by hours I spent on them
+SELECT name,spent_time
+FROM my_games
+ORDER BY spent_time DESC
+LIMIT 5
+
+--The game I spent the least time on (Deus Ex: Mankind Divided with 1 hour)
+SELECT name,spent_time
+FROM my_games
+WHERE spent_time!=0
+ORDER BY spent_time ASC
+LIMIT 1
+
+--Finding out how many games I actually played out of all games
+--using ::float operator to convert the result of the division of two integers to a floating-point number
+SELECT COUNT(*) FILTER (WHERE spent_time>0) AS played_games,
+       COUNT (*) AS total_games,
+	   (COUNT(*) FILTER (WHERE spent_time>0)::float / COUNT(*)) * 100 AS percent_played
+FROM my_games	
