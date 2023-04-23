@@ -84,7 +84,46 @@ FROM 'C:\Datasets\steamspy_data.csv'
 DELIMITER ',' 
 CSV HEADER;
 
---I've got a bunch of errors here and had to clean up the csv file in Spreadsheets 
+--I've got a bunch of errors here and had to clean up the csv file in Spreadsheets what took a few hours and finally I managed to copy the data
+ALTER TABLE steam_data
+ALTER COLUMN initialprice TYPE NUMERIC (10,2);
 
+ALTER TABLE steam_data
+ALTER COLUMN publisher TYPE VARCHAR (1000);
 
+--removing columns I will not use for my analysis for sure
+ALTER TABLE steam_data
+DROP COLUMN score_rank,
+DROP COLUMN average_forever,
+DROP COLUMN average_2weeks,
+DROP COLUMN median_forever,
+DROP COLUMN median_2weeks,
+DROP COLUMN discount,
+DROP COLUMN ccu,
+DROP COLUMN userscore
 
+--top-10 games with the biggest number of positive reviews
+--using COALESCE which replace [null] with the other value, as the table contains many [null]s
+SELECT name,COALESCE(positive,0) AS positive_reviews
+FROM steam_data
+ORDER BY positive_reviews DESC
+LIMIT 10
+
+--Joining my_games to steam_data
+--Using LEFT JOIN
+SELECT my_games.name,spent_time, developer,publisher,positive,negative,owners,genre,tags
+FROM my_games
+LEFT JOIN steam_data ON
+my_games.steam_appid=steam_data.appid
+
+--creating a view to have a quick access to the joined table
+CREATE VIEW my_steam_data AS
+SELECT my_games.name,spent_time, developer,publisher,positive,negative,owners,genre,tags
+FROM my_games
+LEFT JOIN steam_data ON
+my_games.steam_appid=steam_data.appid
+
+--checking null values
+SELECT * 
+FROM my_steam_data
+WHERE developer IS NULL
