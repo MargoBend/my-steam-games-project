@@ -116,14 +116,21 @@ FROM my_games
 LEFT JOIN steam_data ON
 my_games.steam_appid=steam_data.appid
 
---creating a view to have a quick access to the joined table
-CREATE VIEW my_steam_data AS
+--creating a new table to have a quick access to joined tables
+CREATE TABLE my_steam_data AS
 SELECT my_games.name,spent_time, developer,publisher,positive,negative,owners,genre,tags
 FROM my_games
 LEFT JOIN steam_data ON
 my_games.steam_appid=steam_data.appid
 
---checking null values
+--checking null values for genre for games I played
 SELECT * 
 FROM my_steam_data
-WHERE developer IS NULL
+WHERE genre IS NULL AND spent_time>0
+
+--There are 16 games with null in genre. I will update them manually
+--I am using UPDATE query and go through 16 games one by one
+UPDATE my_steam_data
+SET genre='Action'
+WHERE name='...' --inserting the name of the game instead of '...'
+
