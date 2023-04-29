@@ -57,7 +57,7 @@ SELECT COUNT(*) FILTER (WHERE spent_time>0) AS played_games,
        COUNT (*) AS total_games,
 	(COUNT(*) FILTER (WHERE spent_time>0)::float / COUNT(*)) * 100 AS percent_played
 FROM my_games	
---Result: I played 147 games what is 70& of all games i own
+--Result: I played 147 games what is 70% of all games I own
 
 
 --I want to explore more and I will use a public steam data 
