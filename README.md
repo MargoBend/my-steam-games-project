@@ -3,7 +3,7 @@ My Steam Game History Exploration Project
 
 My goals:
 - Practicing queries
-- Practicing using open raw data
+- Practicing of using raw data
 - Practicing data cleaning
 - Finding out how much time I spent on playing steam games, how many games I actually played out of all games, my top-5 games by hours and my most favorite genre in Steam
 
